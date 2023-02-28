@@ -7,6 +7,7 @@
 # set the core.hooksPath Git configuration with
 # "git config --replace-all --global core.hooksPath ~/.git/hooks". Do not rename
 # the file as "commit-msg" is a Git hook.
+#
 # Once done, it it magically let you know if your commit message title is over
 # the limit, and cancel the commit. Update the title to shorten the text, and
 # try to commit again.

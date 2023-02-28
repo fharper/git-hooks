@@ -1,0 +1,28 @@
+#!/bin/zsh
+
+#
+# Ensure no commit message titles are over the 72 characters limit best practice
+#
+# To use this custom Git hook, add the file to a folder (ex. ~/.git/hooks), and
+# set the core.hooksPath Git configuration with
+# "git config --replace-all --global core.hooksPath ~/.git/hooks". Do not rename
+# the file as "commit-msg" is a Git hook.
+# Once done, it it magically let you know if your commit message title is over
+# the limit, and cancel the commit. Update the title to shorten the text, and
+# try to commit again.
+#
+# More information on Git Hooks at
+# https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks
+#
+
+message_limit=72
+commit_message_file=$1
+message=`head -n1 $commit_message_file`
+message_lenght=${#message}
+
+if [ ${message_lenght} -gt ${message_limit} ]; then
+    message_diff=$(($message_lenght-$message_limit))
+
+    echo "The commit message has ${message_diff} too many characters (limit of ${message_limit})."
+    exit 1
+fi

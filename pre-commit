@@ -1,0 +1,43 @@
+#!/bin/zsh
+
+#
+# Ensure no commit are done directly on the main (or master) branch unless it's
+# one of my reppository
+#
+# To use this custom Git hook, add the file to a folder (ex. ~/.git/hooks), and
+# set the core.hooksPath Git configuration with
+# "git config --replace-all --global core.hooksPath ~/.git/hooks". Do not rename
+# the file as "pre-commit" is a Git hook.
+#
+# Once done, it it magically let you know if your try to commit directly to the
+# main branch of a repository that isn't yours. You'll have the option to
+# continue the commit, or cancel it (default option). To prevent this message
+# for appearing for your personal repositories, add them in the "MY_REPOS"
+# array, one per line within double quotes.
+#
+# More information on Git Hooks at
+# https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks
+#
+
+MY_REPOS=(
+  "your_repo"
+  "your_second_repo"
+)
+
+REPO=$(basename "$PWD")
+
+if [ $MY_REPOS[(Ie)$REPO] -eq 0 ]; then
+  # prevent commit to local main branch
+  BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+  if [[ "$BRANCH" == "master" || "$BRANCH" == "main" ]]; then
+    echo "You are on branch $BRANCH. Are you sure you want to commit to this branch?"
+    vared -p "Are you sure you want to do that? [y/N]: " -c ANSWER
+
+    if [ "$ANSWER" != "y" ] && [ "$ANSWER" != "Y" ] ; then
+      exit 1
+    fi
+  fi
+fi
+
+exit 0
